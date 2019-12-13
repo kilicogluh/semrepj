@@ -13,4 +13,4 @@ java -Xmx1g -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.n
 java -Xmx1g -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.ner.metamap.MetaMapLiteServer $@ &
 java -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.ner.wsd.WSDServer $@ &
 java -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.umls.HierarchyDBServer $@ &
-java -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.ner.gnormplus.GNormPlusJNIServer $@ & 
+java -Djava.library.path=CRF/.libs -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.ner.gnormplus.GNormPlusJNIServer $@ & 
