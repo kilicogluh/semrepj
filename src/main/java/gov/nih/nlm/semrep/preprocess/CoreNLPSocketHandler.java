@@ -34,9 +34,10 @@ public class CoreNLPSocketHandler extends Thread {
 	String received;
 	String toreturn;
 	try {
+	    ObjectOutputStream ostream = new ObjectOutputStream(socket.getOutputStream());
 	    BufferedReader br = new BufferedReader(new InputStreamReader(bis));
 	    // PrintWriter bw = new PrintWriter(socket.getOutputStream(), true);
-	    ObjectOutputStream ostream = new ObjectOutputStream(socket.getOutputStream());
+	    //ObjectOutputStream ostream = new ObjectOutputStream(socket.getOutputStream());
 	    String line;
 	    while (true) {
 		line = br.readLine();
@@ -52,8 +53,10 @@ public class CoreNLPSocketHandler extends Thread {
 		    System.out.println("Elapsed time: " + estimatedTime + " milisec.");
 		    // System.out.println("NLP Output: " + result);
 		    // result = result.replaceAll("\\n", " ");
+			System.out.println("SIZE: " + sentenceAnns.size());
 		    ostream.writeObject(serializable);
-		    ostream.flush();
+			System.out.println("Wrote object.");
+		    //ostream.flush();
 		    // bw.flush();
 		} else {
 		    continue;

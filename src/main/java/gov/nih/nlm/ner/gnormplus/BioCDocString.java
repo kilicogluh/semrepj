@@ -53,6 +53,7 @@ public class BioCDocString {
 	try {
 	    collection = connector.startRead(new InputStreamReader(new FileInputStream(InputFile), "UTF-8"));
 	} catch (UnsupportedEncodingException | FileNotFoundException | XMLStreamException e) {
+	e.printStackTrace();
 	    BufferedReader br = new BufferedReader(new FileReader(InputFile));
 	    String line = "";
 	    String status = "";
@@ -60,6 +61,7 @@ public class BioCDocString {
 	    boolean tiabs = false;
 	    Pattern patt = Pattern.compile("^([^\\|\\t]+)\\|([^\\|\\t]+)\\|([^\\|\\t]+)$");
 	    while ((line = br.readLine()) != null) {
+System.out.println("LINE: " + line);
 		Matcher mat = patt.matcher(line);
 		if (mat.find()) //Title|Abstract
 		{

@@ -21,8 +21,8 @@ public class HierarchyDBServer {
 		System.getProperties().putAll(FileUtils.loadPropertiesFromFile(configFilename));
 		HierarchyDatabase hdb;
 		try {
-			hdb = new HierarchyDatabase(System.getProperty("hierarchy.home", "hierarchyDB"), true);	
-			int port = Integer.parseInt(System.getProperty("hierarchyDB.server.port", "9876"));
+			hdb = new HierarchyDatabase(System.getProperty("hierarchyDB.home", "hierarchyDB"), true);	
+			int port = Integer.parseInt(System.getProperty("hierarchyDB.server.port", "12349"));
 			ServerSocket serverSocket = new ServerSocket(port); 
 			log.info("Hierarchy Database Server initialized...");
 			try {

@@ -45,7 +45,11 @@ public class LexiconTest extends TestCase {
     }
 
     public void testLexicon() throws IOException, SQLException {
-    	SemRep.initLogging();
+        SemRep.initLogging();
+        Properties props = System.getProperties();
+        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+        props.putAll(semrepProps);
+        System.setProperties(props);
 		Document doc = new Document("00000000","treat");
 		SemRep.lexicalSyntacticAnalysis(doc);
 	   SRSentence sent = (SRSentence)doc.getSentences().get(0);
@@ -56,6 +60,6 @@ public class LexiconTest extends TestCase {
 		    log.info("base: " + lexRecord.GetBase() + ", category: " + lexRecord.GetCategory() + ", variant: "
 			    + lexRecord.GetVariants());
 		}
-		assertTrue(lexRecords.size() == 2);
+		assertTrue(lexRecords.size() == 1);
     }
 }

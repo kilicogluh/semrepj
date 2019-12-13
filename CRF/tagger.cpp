@@ -14,7 +14,8 @@
 #include "stream_wrapper.h"
 #include "common.h"
 #include "tagger.h"
-#include "gov_nih_nlm_sem_ner_gene_CRFTestJNI.h"
+//#include "gov_nih_nlm_sem_ner_gene_CRFTestJNI.h"
+#include "gov_nih_nlm_ner_gnormplus_CRFTestJNI.h"
 
 namespace {
 
@@ -530,27 +531,28 @@ const char *getTaggerError() {
 }
 }
 
-JNIEXPORT __jstring* JNICALL Java_gov_nih_nlm_sem_ner_gene_CRFTestJNI_crftest(JNIEnv *env, jobject thisObj, jint nbest, jstring modelNameJNIString, jstring dataJNIString) {
-     // printf("inside tagger.cpp\n");
+JNIEXPORT jstring JNICALL Java_gov_nih_nlm_ner_gnormplus_CRFTestJNI_crftest(JNIEnv *env, jobject thisObj, jint nbest, jstring modelNameJNIString, jstring dataJNIString) {
      CRFPP::Param param;
-     const char *modelNameStr = env->GetStringUTFChars(modelNameJNIString, NULL);
-     // printf("modelNameStr : %s  \n", modelNameStr);
-     if (modelNameStr == NULL) return NULL;
      const char *dataStr = env->GetStringUTFChars(dataJNIString, NULL);
-     // printf("dataString : %s \n", dataStr);
      if (dataStr == NULL) return NULL;
+
+     const char *modelNameStr = env->GetStringUTFChars(modelNameJNIString, NULL);
+     if (modelNameStr == NULL) return NULL;
 
      CRFPP::TaggerImpl tagger;
      tagger.set_nbest(nbest);
      const std::string model = modelNameStr;
-     // printf("nbest  : %d \n", nbest);
-  if (!tagger.open(modelNameStr)) {
-    std::cerr << tagger.what() << std::endl;
-    return NULL;
-  }
-
+     if (!tagger.open(modelNameStr)) {
+    	std::cerr << tagger.what() << std::endl;
+    	return NULL;
+     }
 
      const char* outputStr =  tagger.parse(dataStr, std::strlen(dataStr));
+
+     //release
+     env->ReleaseStringUTFChars(dataJNIString,dataStr);
+     env->ReleaseStringUTFChars(modelNameJNIString,modelNameStr);
+     
      // Step 3: Convert the C-string (char*) into JNI String (jstring) and return
      return env->NewStringUTF( outputStr);
      

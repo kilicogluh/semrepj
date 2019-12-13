@@ -48,8 +48,11 @@ public class WSDTest extends TestCase {
      */
     public void testWSD() throws IOException
     {
-    	SemRep.initLogging();
-    	Properties props = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+        SemRep.initLogging();
+        Properties props = System.getProperties();
+        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+        props.putAll(semrepProps);
+        System.setProperties(props);
     	MetaMapLiteClient client = new MetaMapLiteClient(props);
 		Map<SpanList, LinkedHashSet<Ontology>> annotations = new HashMap<SpanList, LinkedHashSet<Ontology>>();
 		Document doc = new Document("00000000","cold");

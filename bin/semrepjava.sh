@@ -16,4 +16,4 @@
 # e.g. to test with medline:
 # sh bin/semrepjava.sh --inputformat=singlefile --inputtextformat=medline --inputpath=TestFiles/test.ml --outputpath=TestFiles/out.ml
 
-java -jar dist/semrep.jar $@
+java -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.semrep.SemRep $@

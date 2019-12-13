@@ -23,8 +23,8 @@ public class HypernymProcessing {
 	private String hierarchyDBServerName;
 	
 	public HypernymProcessing(Properties props) {
-		this.hierarchyDBServerPort = Integer.parseInt(props.getProperty("hierarchy.server.port", "9876"));
-		this.hierarchyDBServerName = props.getProperty("hierarchy.server.name", "indsrv2");
+		this.hierarchyDBServerPort = Integer.parseInt(props.getProperty("hierarchyDB.server.port", "12349"));
+		this.hierarchyDBServerName = props.getProperty("hierarchyDB.server.name", "localhost");
 	}
 	
 	public boolean find(String input) {

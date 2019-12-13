@@ -27,19 +27,6 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-chunk output
-chunk
-GS_060916
-SemRep_GS
-*.txt
-*.ann2
-*.ann
-/target/
-/classes/
-*.plain
-hierarchyDB
-ontologyDB
-MedLineXML
-
-lexAccess2016
-lexAccess.properties
+target/*
+data/*
+.DS_Store

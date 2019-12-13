@@ -52,7 +52,10 @@ public class MetaMapLiteTest
     public void testMetaMapLite() throws IOException
     {
     	SemRep.initLogging();
-    	Properties props = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+	Properties props = System.getProperties();
+	Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+	props.putAll(semrepProps);
+	System.setProperties(props);
     	MetaMapLiteClient client = new MetaMapLiteClient(props);
 		Map<SpanList, LinkedHashSet<Ontology>> annotations = new HashMap<SpanList, LinkedHashSet<Ontology>>();
 		Document doc = new Document("00000000","breast cancer");

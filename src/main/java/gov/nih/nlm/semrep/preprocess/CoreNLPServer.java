@@ -48,6 +48,7 @@ import gov.nih.nlm.ling.core.SynDependency;
 import gov.nih.nlm.ling.core.Word;
 import gov.nih.nlm.ling.core.WordLexeme;
 import gov.nih.nlm.ling.util.FileUtils;
+import gov.nih.nlm.semrep.SemRep;
 
 /**
  * A class that provides access to Stanford CoreNLP functionality.
@@ -405,11 +406,13 @@ public class CoreNLPServer {
     }
 
     public static void main(String[] args) throws IOException {
-	System.setProperty("java.util.logging.config.file", "logging.properties");
-	if (semrepprops == null)
-	    System.out.println("semrepprops is null");
-	// int port = Integer.parseInt(semrepprops.getProperty("stanfordcorenlp.server.port", "22392"));
-	int port = 22392;
+	SemRep.initLogging();
+	Properties semrepprops = new Properties(System.getProperties());
+	Properties configFileProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+	semrepprops.putAll(configFileProps);
+	//System.setProperty("java.util.logging.config.file", "logging.properties");
+	int port = Integer.parseInt(semrepprops.getProperty("stanfordcorenlp.server.port", "22392"));
+	//int port = 22392;
 	ServerSocket serverSocket = new ServerSocket(port);
 	String line;
 	// System.out.println("Client connected");

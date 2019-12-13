@@ -194,6 +194,7 @@ public class SemRep {
 	}
 	for (Sentence sent : doc.getSentences()) {
 	    harmonizeWithLexMatches((SRSentence) sent);
+	System.out.println("SENTENCE :" + sent.toString());
 	}
     }
 
@@ -208,8 +209,8 @@ public class SemRep {
      */
     public static void coreNLPAnalysisUsingServer(Document doc) throws IOException {
 
-	if (coreNLP == null)
-	    coreNLP = CoreNLPProcessing.getInstance(System.getProperties());
+	//if (coreNLP == null)
+	//    coreNLP = CoreNLPProcessing.getInstance(System.getProperties());
 	CoreNLPProcessing.coreNLPUsingServer(doc);
 
 	// Document doc = CoreNLPProcessing.coreNLPUsingServer(orgdoc);

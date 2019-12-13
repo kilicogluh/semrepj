@@ -2,10 +2,14 @@ package gov.nih.nlm.umls;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import gov.nih.nlm.ling.util.FileUtils;
+import gov.nih.nlm.semrep.SemRep;
 
 public class OntologyDBTest 
 extends TestCase
@@ -37,7 +41,13 @@ private static Logger log = Logger.getLogger(OntologyDBTest.class.getName());
 	 */
 	public void testOntologyDB() throws IOException
 	{
-		OntologyDatabase ontDB = new OntologyDatabase("ontologyDB", true);
+        	SemRep.initLogging();
+        Properties props = System.getProperties();
+        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+        props.putAll(semrepProps);
+        System.setProperties(props);
+	//	OntologyDatabase ontDB = new OntologyDatabase("ontologyDB", true);
+		OntologyDatabase ontDB = new OntologyDatabase(System.getProperty("ontologyDB.home","ontologyDB"), true);
 		assertTrue(ontDB.contains("topp-uses-carb"));
 	}
 

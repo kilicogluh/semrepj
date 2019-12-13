@@ -141,8 +141,8 @@ public class GNormPlusStringWrapper {
     }
 
     private void initDictionaries() throws FileNotFoundException, IOException {
-	String species = properties.getProperty("FocusSpecies");
-	String folder = properties.getProperty("DictionaryFolder");
+	String species = properties.getProperty("gnormplus.species");
+	String folder = properties.getProperty("gnormplus.dictionaryDir");
 	BufferedReader br;
 	String line = "";
 
@@ -382,7 +382,7 @@ public class GNormPlusStringWrapper {
     public List<String> annotateFile(String inFile) throws IOException, XMLStreamException {
 	String inFileName = inFile.substring(inFile.lastIndexOf(File.separator) + 1);
 	String TrainTest = "Test";
-	String species = properties.getProperty("FocusSpecies");
+	String species = properties.getProperty("gnormplus.species");
 	List<String> annotation = null;
 
 	double startTime, endTime, totTime;

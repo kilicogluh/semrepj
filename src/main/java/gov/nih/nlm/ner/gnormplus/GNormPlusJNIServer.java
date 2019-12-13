@@ -24,6 +24,9 @@ import javax.xml.stream.XMLStreamException;
 import gov.nih.nlm.ling.core.SpanList;
 import gov.nih.nlm.ling.sem.Concept;
 import gov.nih.nlm.ling.sem.Ontology;
+import gov.nih.nlm.ling.util.FileUtils;
+import gov.nih.nlm.semrep.SemRep;
+
 
 /**
  * A class that provides access to GNormPlus JNI Server.
@@ -123,25 +126,15 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
     @Override
     protected void initConfig(String filename) throws FileNotFoundException, IOException {
 	properties = new Properties();
-	BufferedReader br = new BufferedReader(new FileReader(filename));
-	String line = "";
-	Pattern ptmp = Pattern.compile("^	([A-Za-z]+) = ([^ \\t\\n\\r]+)$");
-	while ((line = br.readLine()) != null) {
-	    // System.out.println(line + " ; setup.txt");
-	    Matcher mtmp = ptmp.matcher(line);
-	    if (mtmp.find()) {
-		properties.put(mtmp.group(1), mtmp.group(2));
-	    }
-	}
-	br.close();
+	properties = FileUtils.loadPropertiesFromFile(filename);
 	if (!properties.containsKey("GeneIDMatch")) {
 	    properties.put("GeneIDMatch", "True");
 	}
     }
 
     private void initDictionaries() throws FileNotFoundException, IOException {
-	String species = properties.getProperty("FocusSpecies");
-	String folder = properties.getProperty("DictionaryFolder");
+	String species = properties.getProperty("gnormplus.species");
+	String folder = properties.getProperty("gnormplus.dictionaryDir");
 	BufferedReader br;
 	String line = "";
 
@@ -406,7 +399,7 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
     public List<String> annotateFile(String inFile) throws IOException, XMLStreamException {
 	String inFileName = inFile.substring(inFile.lastIndexOf(File.separator) + 1);
 	String TrainTest = "Test";
-	String species = properties.getProperty("FocusSpecies");
+	String species = properties.getProperty("gnormplus.species");
 	List<String> annotation = null;
 
 	double startTime, endTime, totTime;
@@ -428,8 +421,8 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 	    BioCDocobj.BioCReader(inFile);
 	} else if (checkR.equals("PubTator")) {
 	    Format = "PubTator";
-	    BioCDocobj.PubTator2BioC(inFile, "tmp/" + inFileName);
-	    BioCDocobj.BioCReader("tmp/" + inFileName);
+	    BioCDocobj.PubTator2BioC(inFile, "/tmp/" + inFileName);
+	    BioCDocobj.BioCReader("/tmp/" + inFileName);
 	} else {
 	    System.out.println(checkR);
 	    System.exit(0);
@@ -444,10 +437,10 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 	    GNRString GNRobj = new GNRString();
 
 	    if (Format.equals("PubTator")) {
-		GNRobj.LoadInputFile(BioCDocobj, "tmp/" + inFileName, gNormPlus, "tmp/" + inFileName + ".Abb",
+		GNRobj.LoadInputFile(BioCDocobj, "/tmp/" + inFileName, gNormPlus, "/tmp/" + inFileName + ".Abb",
 			TrainTest);
 	    } else if (Format.equals("BioC")) {
-		GNRobj.LoadInputFile(BioCDocobj, inFile, gNormPlus, "tmp/" + inFileName + ".Abb", TrainTest);
+		GNRobj.LoadInputFile(BioCDocobj, inFile, gNormPlus, "/tmp/" + inFileName + ".Abb", TrainTest);
 	    }
 
 	    //
@@ -475,7 +468,7 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 
 	    if (Format.equals("PubTator")) {
 		GNRobj.ReadCRFresult(BioCDocobj, df.Location, df.Output, 0.005, 0.05); // 0.005,0.05
-		GNRobj.PostProcessing(BioCDocobj, gNormPlus, "tmp/" + inFileName);
+		GNRobj.PostProcessing(BioCDocobj, gNormPlus, "/tmp/" + inFileName);
 	    } else if (Format.equals("BioC")) {
 		/*
 		 * GNRobj.ReadCRFresult(BioCDocobj, "tmp/" + inFileName + ".loca", "tmp/" +
@@ -554,8 +547,8 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 	    }
 	} else {
 	    if (Format.equals("PubTator")) {
-		GNobj.GeneNormalization("tmp/" + inFileName, BioCDocobj, gNormPlus, false);
-		BioCDocobj.BioC2PubTator("tmp/" + inFileName + ".GN.xml", null);
+		GNobj.GeneNormalization("/tmp/" + inFileName, BioCDocobj, gNormPlus, false);
+		BioCDocobj.BioC2PubTator("/tmp/" + inFileName + ".GN.xml", null);
 	    } else if (Format.equals("BioC")) {
 		GNobj.GeneNormalization(inFile, BioCDocobj, gNormPlus, false);
 	    }
@@ -602,7 +595,7 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 	 */
 	if ((!properties.containsKey("DeleteTmp"))
 		|| properties.getProperty("DeleteTmp").toLowerCase().equals("true")) {
-	    String path = "tmp";
+	    String path = "/tmp";
 	    File file = new File(path);
 	    // System.out.println("DeleteTmp is true");
 	    File[] files = file.listFiles();
@@ -655,7 +648,7 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
     @Override
     public Map<SpanList, LinkedHashSet<Ontology>> annotateText(String inText) throws IOException, XMLStreamException {
 	Map<SpanList, LinkedHashSet<Ontology>> annotations = new HashMap<>();
-	String tempFileName = "tmp" + File.separator + "TMP" + inText.hashCode() + ".txt";
+	String tempFileName = "/tmp" + File.separator + "TMP" + inText.hashCode() + ".txt";
 	BioCConverter.convertAndWrite(inText, tempFileName);
 	// String tempOutFileName = "TMP" + inText.hashCode() + ".out";
 	// BioCDocString BioCDocobj = annotateFile(tempFileName, tempOutFileName);
@@ -708,7 +701,7 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 
     public String annotateText2String(String inText) throws IOException, XMLStreamException {
 	Map<SpanList, LinkedHashSet<Ontology>> annotations = new HashMap<>();
-	String tempFileName = "tmp" + File.separator + "TMP" + inText.hashCode() + ".txt";
+	String tempFileName = "/tmp" + File.separator + "TMP" + inText.hashCode() + ".txt";
 	BioCConverter.convertAndWrite(new String(inText + "\n"), tempFileName);
 	// String tempOutFileName = "TMP" + inText.hashCode() + ".out";
 	// BioCDocString BioCDocobj = annotateFile(tempFileName, tempOutFileName);
@@ -730,12 +723,12 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
     }
 
     public static void main(String[] args) throws IOException {
-	System.setProperty("java.util.logging.config.file", "logging.properties");
-	int port = Integer.parseInt(args[0]);
+//	System.setProperty("java.util.logging.config.file", "logging.properties");
+	SemRep.initLogging();
+	GNormPlusJNIServer gps = GNormPlusJNIServer.getInstance("semrepjava.properties");
+	int port = Integer.parseInt(properties.getProperty("gnormplus.server.port","12347"));
 	ServerSocket serverSocket = new ServerSocket(port);
-	String line;
 	System.out.println("GNormPlus Server started.");
-	GNormPlusJNIServer gps = GNormPlusJNIServer.getInstance(args[1]);
 
 	try {
 	    while (true) {
@@ -748,6 +741,5 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-
     }
 }

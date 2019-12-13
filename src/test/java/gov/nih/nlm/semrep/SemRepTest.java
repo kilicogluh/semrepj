@@ -2,10 +2,13 @@ package gov.nih.nlm.semrep;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import gov.nih.nlm.ling.core.Document;
 import gov.nih.nlm.ling.sem.SemanticItem;
+import gov.nih.nlm.ling.util.FileUtils;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -39,9 +42,14 @@ public class SemRepTest extends TestCase {
      * @throws IOException
      */
     public void testSemRep() throws IOException {
-	SemRep.initLogging();
-	String args[] = new String("--inputformat={}  --inputpath={} --outputpath={}").split("\\s+");
-	System.setProperties(SemRep.getProps(args));
+        SemRep.initLogging();
+        Properties props = System.getProperties();
+        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+        props.putAll(semrepProps);
+        System.setProperties(props);
+	SemRep.init();
+	//String args[] = new String("--inputformat={}  --inputpath={} --outputpath={}").split("\\s+");
+	//System.setProperties(SemRep.getProps(args));
 	Document doc = new Document("00000000", "Aspirin treats headache.");
 	SemRep.lexicalSyntacticAnalysis(doc);
 	SemRep.semanticAnalysis(doc);
