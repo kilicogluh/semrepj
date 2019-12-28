@@ -25,7 +25,7 @@ public class WSDServer {
 		
 		
 		Properties  optionProps = new Properties();
-		String configFilename = "semrepjava.properties";
+		String configFilename = "semrepj.properties";
 		if(args.length > 0) {
 			int i = 0;
 			while( i < args.length) {

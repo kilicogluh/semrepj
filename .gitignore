@@ -31,3 +31,4 @@ target/*/*
 target/*.jar
 data/*
 .DS_Store
+/target/

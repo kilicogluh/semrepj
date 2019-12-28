@@ -97,7 +97,7 @@ public class LexiconWrapper {
      */
     public static LexiconWrapper getInstance() {
 	if (lexWrapper == null) {
-		lexWrapper = new LexiconWrapper("semrepjava.properties");
+		lexWrapper = new LexiconWrapper("semrepj.properties");
 	}
 	return lexWrapper;
     }

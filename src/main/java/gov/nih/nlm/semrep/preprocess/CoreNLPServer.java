@@ -84,7 +84,7 @@ public class CoreNLPServer {
 	//props.put("annotators", "tokenize,ssplit,pos,lemma");
 	//		props.put("tokenize.options", "normalizeParentheses=false,normalizeOtherBrackets=false");
 	pipeline = new StanfordCoreNLP(props);
-	semrepprops = FileUtils.loadPropertiesFromFile("./semrepjava.properties");
+	semrepprops = FileUtils.loadPropertiesFromFile("./semrepj.properties");
     }
 
     /**
@@ -408,7 +408,7 @@ public class CoreNLPServer {
     public static void main(String[] args) throws IOException {
 	SemRep.initLogging();
 	Properties semrepprops = new Properties(System.getProperties());
-	Properties configFileProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+	Properties configFileProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
 	semrepprops.putAll(configFileProps);
 	//System.setProperty("java.util.logging.config.file", "logging.properties");
 	int port = Integer.parseInt(semrepprops.getProperty("stanfordcorenlp.server.port", "22392"));

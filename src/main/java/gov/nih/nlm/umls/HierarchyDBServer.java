@@ -17,7 +17,7 @@ public class HierarchyDBServer {
 	
 	public static void main(String[] args) throws IOException {
 		
-		String configFilename = "semrepjava.properties";
+		String configFilename = "semrepj.properties";
 		System.getProperties().putAll(FileUtils.loadPropertiesFromFile(configFilename));
 		HierarchyDatabase hdb;
 		try {

@@ -30,7 +30,7 @@ public class MetaMapLiteServer {
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, NoSuchMethodException, IllegalAccessException {
 		
 		Properties  optionProps = new Properties();
-		String configFilename = "semrepjava.properties";
+		String configFilename = "semrepj.properties";
 		if(args.length > 0) {
 			int i = 0;
 			while( i < args.length) {

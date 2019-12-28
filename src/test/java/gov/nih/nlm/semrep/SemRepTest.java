@@ -44,7 +44,7 @@ public class SemRepTest extends TestCase {
     public void testSemRep() throws IOException {
         SemRep.initLogging();
         Properties props = System.getProperties();
-        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
+        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
         props.putAll(semrepProps);
         System.setProperties(props);
 	SemRep.init();
