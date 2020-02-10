@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="metamaplite-3.6.2rc1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/metamaplite-3.6.2rc1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="lvg2016dist-0.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/lvg2016dist-0.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lexCheck2011dist-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/gnormplus-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/aec_mrd_wsd-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/bioscores-2.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/bioscores-2.0.1.jar!/javadoc" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/gnormplus-1.0.0.jar!/" />
+    </SOURCES>
+  </library>
+</component>

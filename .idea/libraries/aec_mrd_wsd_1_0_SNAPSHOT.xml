@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="aec_mrd_wsd-1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/aec_mrd_wsd-1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
