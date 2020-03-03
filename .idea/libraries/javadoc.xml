@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="javadoc">
+    <CLASSES />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/mybioscores.jar!/javadoc" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/mybioscores.jar!/src" />
+    </SOURCES>
+  </library>
+</component>

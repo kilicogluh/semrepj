@@ -1,27 +1,32 @@
 package gov.nih.nlm.umls;
 
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Logger;
+import org.javatuples.Pair;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import gov.nih.nlm.ling.core.Chunk;
 import gov.nih.nlm.ling.core.Document;
+import gov.nih.nlm.ling.core.Sentence;
 import gov.nih.nlm.ling.core.SurfaceElement;
 import gov.nih.nlm.ling.sem.Argument;
+import gov.nih.nlm.ling.sem.Concept;
 import gov.nih.nlm.ling.sem.Entity;
 import gov.nih.nlm.ling.sem.SemanticItem;
 import gov.nih.nlm.ner.metamap.ScoredUMLSConcept;
+import gov.nih.nlm.semrep.core.SRSentence;
 import gov.nih.nlm.semrep.utils.SemRepUtils;
+
 
 public class HypernymProcessing {
 	
 	private static Logger log = Logger.getLogger(HypernymProcessing.class.getName());	
 	private int hierarchyDBServerPort;
 	private String hierarchyDBServerName;
-	
+	private List<String> GEOA = Arrays.asList("country", "countries", "islands", "continent", "locations", "cities");
+	private int MAX_LENGTH = 2;
+
 	public HypernymProcessing(Properties props) {
 		this.hierarchyDBServerPort = Integer.parseInt(props.getProperty("hierarchyDB.server.port", "12349"));
 		this.hierarchyDBServerName = props.getProperty("hierarchyDB.server.name", "localhost");
@@ -122,6 +127,51 @@ public class HypernymProcessing {
 		}
 		return false;
 	}
-	//test
 
+	public boolean findverbs(List<Chunk> interveningList) {
+		for (Chunk c: interveningList) {
+			Pair<String, String> pair = c.getPosLemma();
+			if (pair.getKey() == 'VBP' ) {
+				return true;
+			}
+		}
+	}
+
+
+	public boolean AllowedGEOA(Concept Concept1, Concept Concept2) {
+		if (Concept1.getSemtypes().contains("geoa") && Concept2.getSemtypes().contains("geoa")) {
+			String last = Concept2.getName();
+			for (String s: GEOA) {
+				if (last.substring(last.length() - 1) == s) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+
+	public List<Chunk> getChunksInBetween(Chunk chunk1, Chunk chunk2) throws InvalidArgumentException{
+		if (chunk1.getSurfaceElementList().get(0).getSentence().getId() == chunk2.getSurfaceElementList().get(0).getSentence().getId()) {
+			SRSentence sentence = (SRSentence) chunk1.getSurfaceElementList().get(0).getSentence();
+			List<Chunk> chunks = sentence.getChunks();
+
+			List<Chunk> listOfChunks = new ArrayList<Chunk>();
+			boolean addChunk = false;
+			for (Chunk c: chunks) {
+				if (c == chunk1) {
+					addChunk = true;
+				}
+				if (addChunk) {
+					listOfChunks.add(c);
+				}
+				if (c == chunk2) {
+					return listOfChunks;
+				}
+			}
+		} else {
+			throw new IllegalArgumentException("Chunk not in same sentence");
+		}
+		return null;
+	}
 }
