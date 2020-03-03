@@ -129,6 +129,33 @@ public class HypernymProcessing {
 		return false;
 	}
 
+	public List<Argument> hypernymy(SurfaceElement first, SurfaceElement second) {
+
+	}
+
+	public boolean interveningPhrasesOK(Chunk NP1, Chunk NP2) {
+		try {
+			List<Chunk> interveningList = getChunksInBetween(NP1, NP2);
+			int distance = interveningList.size();
+			if (distance == 1) {
+				boolean apposite = mustBeAppositives(NP1, NP2);
+				if (apposite) return true;
+			}
+			if (parenthesis(interveningList)) {
+				return false;
+			}
+			if (distance > 1) {
+				boolean verbsFound = findverbs(interveningList);
+				if (verbsFound) return true;
+			}
+			if (distance == 2) {
+
+			}
+		} catch (InvalidArgumentException e){
+
+		}
+		return false;
+	}
 
 
 	public boolean mustBeAppositives(Chunk NP1, Chunk NP2) {
@@ -150,16 +177,16 @@ public class HypernymProcessing {
 	}
 
 	public boolean parenthesis(List<Chunk> interveningList){
-		Stack<String> stack = new Stack<String>();
-		for (Chunk c: interveningList) {
-			String str = c.getString();
-			if (str == "(" || str == "[" || str == "{") {
-				stack.push("(");
-			} else if (stack.peek() == ")" || stack.peek() == "]" || stack.peek() == "}") {
-				stack.pop();
-			}
-		}
-		return stack.empty();
+//		Stack<String> stack = new Stack<String>();
+//		for (Chunk c: interveningList) {
+//			String str = c.getString();
+//			if (str == "(" || str == "[" || str == "{") {
+//				stack.push("(");
+//			} else if (stack.peek() == ")" || stack.peek() == "]" || stack.peek() == "}") {
+//				stack.pop();
+//			}
+//		}
+//		return stack.empty();
 	}
 
 
