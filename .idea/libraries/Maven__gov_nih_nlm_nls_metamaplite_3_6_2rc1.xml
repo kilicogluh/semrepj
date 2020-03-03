@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: gov.nih.nlm.nls:metamaplite:3.6.2rc1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/nih/nlm/nls/metamaplite/3.6.2rc1/metamaplite-3.6.2rc1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/nih/nlm/nls/metamaplite/3.6.2rc1/metamaplite-3.6.2rc1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/gov/nih/nlm/nls/metamaplite/3.6.2rc1/metamaplite-3.6.2rc1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
