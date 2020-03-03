@@ -26,6 +26,7 @@ public class HypernymProcessing {
 	private String hierarchyDBServerName;
 	private List<String> GEOA = Arrays.asList("country", "countries", "islands", "continent", "locations", "cities");
 	private int MAX_LENGTH = 2;
+	private List<String> APPOSITIVES = Arrays.asList("such as", "particularly", "including");
 
 	public HypernymProcessing(Properties props) {
 		this.hierarchyDBServerPort = Integer.parseInt(props.getProperty("hierarchyDB.server.port", "12349"));
@@ -128,13 +129,62 @@ public class HypernymProcessing {
 		return false;
 	}
 
-	public boolean findverbs(List<Chunk> interveningList) {
+
+
+	public boolean mustBeAppositives(Chunk NP1, Chunk NP2) {
+//		String string1 = NP1.getString();
+//		String string2 = NP2.getString();
+//
+//		if (string1.contains(",") && string2.contains(",")) {
+//			return true;
+//		} else if (string2.contains("(")) {
+//			return true;
+//		} else {
+//			for (String word: APPOSITIVES) {
+//				if (string2.contains(word)) {
+//					return true;
+//				}
+//			}
+//		}
+		return false;
+	}
+
+	public boolean parenthesis(List<Chunk> interveningList){
+		Stack<String> stack = new Stack<String>();
 		for (Chunk c: interveningList) {
-			Pair<String, String> pair = c.getPosLemma();
-			if (pair.getKey() == 'VBP' ) {
-				return true;
+			String str = c.getString();
+			if (str == "(" || str == "[" || str == "{") {
+				stack.push("(");
+			} else if (stack.peek() == ")" || stack.peek() == "]" || stack.peek() == "}") {
+				stack.pop();
 			}
 		}
+		return stack.empty();
+	}
+
+
+
+
+	public boolean findverbs(List<Chunk> interveningList) {
+//		for (int i = 0; i < interveningList.size() - 1; i++) {
+//			Pair<String, String> pair = interveningList.get(i).getPosLemma();
+//			if (pair.getKey() == "VBP" && pair.getValue = "be") {
+//				Pair<String, String> followingPair = interveningList.get(i+1).getPosLemma();
+//				if (! followingPair.getKey() == "VBP") {
+//					return true;
+//				} else {
+//					if (i < i < interveningList.size() - 2) {
+//						if (interveningList.get(i+2).getPosLemma().getValue == "as") {
+//							return true;
+//						}
+//					}
+//				}
+//			}
+//			if (pair.getValue() == "remain") {
+//				return true;
+//			}
+//		}
+		return false;
 	}
 
 
