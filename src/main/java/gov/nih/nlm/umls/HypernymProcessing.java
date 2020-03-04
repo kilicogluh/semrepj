@@ -121,16 +121,34 @@ public class HypernymProcessing {
 		}
 		return null;
 	}
-	
-	public static boolean semGroupMatch(LinkedHashSet<String> first, LinkedHashSet<String> second) {
-		for(String s : first) {
-			if(!s.contains("conc") && !s.contains("anat") && second.contains(s)) return true;
+//
+//	public static boolean semGroupMatch(LinkedHashSet<String> first, LinkedHashSet<String> second) {
+//		for(String s : first) {
+//			if(!s.contains("conc") && !s.contains("anat") && second.contains(s)) return true;
+//		}
+//		return false;
+//	}
+
+	public List<Argument> hypernymy(ScoredUMLSConcept head, ScoredUMLSConcept mod) {
+		LinkedHashSet<String> headGroup = head.getSemGroups();
+		LinkedHashSet<String> modGroup = mod.getSemGroups();
+
+		List<Argument> args = new ArrayList<>();
+
+		for (String h : headGroup) {
+			for (String m : modGroup) {
+				if (h.equals(m)){
+					if (h.equals("anat") || h.equals("conc")) {// shared group equals Anatomy or Concepts
+						return null;
+					}
+				}
+			}
 		}
-		return false;
-	}
-
-	public List<Argument> hypernymy(SurfaceElement first, SurfaceElement second) {
-
+		String headCUI = head.getId(); //TODO: check if this gets CUI
+		String modCUI = mod.getId();
+		if (find(modCUI + headCUI)) {// check UMLS hiserarchy for modCUI: headCUI
+			//not sure how to get term variable from concept
+		}
 	}
 
 	public boolean interveningPhrasesOK(Chunk NP1, Chunk NP2) {
@@ -159,63 +177,63 @@ public class HypernymProcessing {
 
 
 	public boolean mustBeAppositives(Chunk NP1, Chunk NP2) {
-//		String string1 = NP1.getString();
-//		String string2 = NP2.getString();
-//
-//		if (string1.contains(",") && string2.contains(",")) {
-//			return true;
-//		} else if (string2.contains("(")) {
-//			return true;
-//		} else {
-//			for (String word: APPOSITIVES) {
-//				if (string2.contains(word)) {
-//					return true;
-//				}
-//			}
-//		}
+		String string1 = NP1.getString();
+		String string2 = NP2.getString();
+
+		if (string1.contains(",") && string2.contains(",")) {
+			return true;
+		} else if (string2.contains("(")) {
+			return true;
+		} else {
+			for (String word: APPOSITIVES) {
+				if (string2.contains(word)) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
 	public boolean parenthesis(List<Chunk> interveningList){
-//		Stack<String> stack = new Stack<String>();
-//		for (Chunk c: interveningList) {
-//			String str = c.getString();
-//			if (str == "(" || str == "[" || str == "{") {
-//				stack.push("(");
-//			} else if (stack.peek() == ")" || stack.peek() == "]" || stack.peek() == "}") {
-//				stack.pop();
-//			}
-//		}
-//		return stack.empty();
+		Stack<String> stack = new Stack<String>();
+		for (Chunk c: interveningList) {
+			String str = c.getString();
+			if (str.equals("(") || str.equals("[") || str.equals("{") ) {
+				stack.push("(");
+			} else if (stack.peek().equals(")") || stack.peek().equals("]") || stack.peek().equals("}")) {
+				stack.pop();
+			}
+		}
+		return stack.empty();
 	}
 
 
 
 
 	public boolean findverbs(List<Chunk> interveningList) {
-//		for (int i = 0; i < interveningList.size() - 1; i++) {
-//			Pair<String, String> pair = interveningList.get(i).getPosLemma();
-//			if (pair.getKey() == "VBP" && pair.getValue = "be") {
-//				Pair<String, String> followingPair = interveningList.get(i+1).getPosLemma();
-//				if (! followingPair.getKey() == "VBP") {
-//					return true;
-//				} else {
-//					if (i < i < interveningList.size() - 2) {
-//						if (interveningList.get(i+2).getPosLemma().getValue == "as") {
-//							return true;
-//						}
-//					}
-//				}
-//			}
-//			if (pair.getValue() == "remain") {
-//				return true;
-//			}
-//		}
+		for (int i = 0; i < interveningList.size() - 1; i++) {
+			List<String> pair = interveningList.get(i).getPosLemma();
+			if ((pair.get(0).equals("VBP")) && (pair.get(1).equals("be"))) {
+				List<String> followingPair = interveningList.get(i+1).getPosLemma();
+				if (! (followingPair.get(0).equals("VBP"))) {
+					return true;
+				} else {
+					if (i < interveningList.size() - 2) {
+						if (interveningList.get(i+2).getPosLemma().get(1).equals("as")) {
+							return true;
+						}
+					}
+				}
+			}
+			if (pair.get(1).equals("remain")) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 
-	public boolean AllowedGEOA(Concept Concept1, Concept Concept2) {
+	public boolean allowedGEOA(Concept Concept1, Concept Concept2) {
 		if (Concept1.getSemtypes().contains("geoa") && Concept2.getSemtypes().contains("geoa")) {
 			String last = Concept2.getName();
 			for (String s: GEOA) {
@@ -247,7 +265,7 @@ public class HypernymProcessing {
 				}
 			}
 		} else {
-			throw new IllegalArgumentException("Chunk not in same sentence");
+			log.warning("Chunk not in same sentence");
 		}
 		return null;
 	}
