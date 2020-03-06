@@ -3,13 +3,11 @@ package gov.nih.nlm.umls;
 import java.net.Socket;
 import java.util.*;
 import java.util.logging.Logger;
+
+import gov.nih.nlm.ling.core.*;
 import org.javatuples.Pair;
 
 import com.sun.javaws.exceptions.InvalidArgumentException;
-import gov.nih.nlm.ling.core.Chunk;
-import gov.nih.nlm.ling.core.Document;
-import gov.nih.nlm.ling.core.Sentence;
-import gov.nih.nlm.ling.core.SurfaceElement;
 import gov.nih.nlm.ling.sem.Argument;
 import gov.nih.nlm.ling.sem.Concept;
 import gov.nih.nlm.ling.sem.Entity;
@@ -25,7 +23,7 @@ public class HypernymProcessing {
 	private int hierarchyDBServerPort;
 	private String hierarchyDBServerName;
 	private List<String> GEOA = Arrays.asList("country", "countries", "islands", "continent", "locations", "cities");
-	private int MAX_LENGTH = 2;
+	private int MAX_DISRANCE = 5;
 	private List<String> APPOSITIVES = Arrays.asList("such as", "particularly", "including");
 
 	public HypernymProcessing(Properties props) {
@@ -55,7 +53,7 @@ public class HypernymProcessing {
 		List<SurfaceElement> seList = chunk.getSurfaceElementList();
 		List<Argument> result;
 		int size = seList.size();
-		for(int i = size - 1; i >= 0; i--) {		
+		for(int i = size - 1; i >= 0; i--) {
 			if(first == null) {
 				if(seList.get(i).getChunkRole() == 'H') {
 					first = seList.get(i);
@@ -74,7 +72,8 @@ public class HypernymProcessing {
 		}
 		return null;
 	}
-	
+
+
 	public List<Argument> findIntraNPBetweenSurfaceElements(SurfaceElement first, SurfaceElement second) {
 		if(first == null || second == null) return null;
 		Document doc = first.getSentence().getDocument();
@@ -121,6 +120,107 @@ public class HypernymProcessing {
 		}
 		return null;
 	}
+
+
+	/***
+	 * Wrapper function for iterhypernymy
+	 * @param NP Chunk to get head item for; assume it is NP
+	 * @return SurfaceElement for head item
+	 */
+	public SurfaceElement getHeadFromChunk(Chunk NP) {
+		if(!NP.getChunkType().equalsIgnoreCase("NP"))
+			return null;
+		SurfaceElement first = null, second = null;
+		List<SurfaceElement> seList = NP.getSurfaceElementList();
+		List<Argument> result;
+
+		int size = seList.size();
+
+		for(int i = size - 1; i >= 0; i--) {
+			if (first == null) {
+				if (seList.get(i).getChunkRole() == 'H') {
+					first = seList.get(i);
+					return first;
+				}
+			}
+		}
+
+		return null;//should something be done if it cannot find head item?
+	}
+
+	/***
+	 * Helper function for interHypernymy. get SemanticItem for given head element
+	 * @param NP
+	 * @return SemanticItem for NP
+	 */
+	public SemanticItem getEntityFromSurfaceElement(SurfaceElement NP) {
+		if (NP == null) return null;
+		Document doc = NP.getDocument();
+		LinkedHashSet<SemanticItem> hashSet = Document.getSemanticItemsBySpan(doc, NP.getSpan(), false); // should it allow overlap?
+		if (hashSet.size() == 0) return null;
+		SemanticItem headEntity = null;
+		ScoredUMLSConcept headConcept = null;
+		String headCUI;
+		Argument subject, object;
+		List<Argument> args = new ArrayList<>();
+
+		//find concept, cui, and entity for head item
+		for (SemanticItem sem: hashSet) {
+			if (((Entity)sem).getSense() instanceof ScoredUMLSConcept) {
+				headEntity = sem;
+				return headEntity;
+			}
+		}
+		return null;
+
+	}
+
+	public List<Argument> findInterNPwithinDistance(Chunk NPChunk) {
+		SurfaceElement NP = getHeadFromChunk(NPChunk);
+		if (NP == null) return null;
+
+		ScoredUMLSConcept headConcept = null;
+		String headCUI;
+
+		SemanticItem headSem = getEntityFromSurfaceElement(NP);
+		if (headSem == null) return null;
+		headConcept = (ScoredUMLSConcept)((Entity) headSem).getSense();
+		headCUI = ((Entity)headSem).getSense().getId();
+
+		if (headConcept == null) return null;
+
+		//look to the right of NP for hypernymy pair
+		List<Chunk> chunks = NP.getChunk();
+		Chunk NP2;
+		ScoredUMLSConcept head2Concept;
+		String head2CUI;
+		SurfaceElement head2se;
+		List<Argument> output = null;
+		int i = 0;
+		while (i < MAX_DISRANCE) {
+			for (Chunk chunk: chunks) {
+				if (chunk.getChunkType().equalsIgnoreCase("NP")) {//found NP pair
+					NP2 = chunk;
+					head2se = getHeadFromChunk(NP2);
+					SemanticItem head2Sem = getEntityFromSurfaceElement(head2se);
+					if (head2Sem == null) return null;
+					head2Concept = (ScoredUMLSConcept)((Entity) head2Sem).getSense();
+					head2CUI = ((Entity)head2Sem).getSense().getId();
+					//TODO If (xsx (NP,NP2)) return null not sure what this is
+					if (!headCUI.equalsIgnoreCase(head2CUI)) {
+						output = hypernymy(headSem, head2Sem);
+					}
+					if (output != null && allowedGEOA(headConcept, head2Concept)) {//A potential ISA relationship is returned
+						if (interveningPhrasesOK(NPChunk, NP2)) {
+							return output;
+						}
+					}
+				}
+				i++; //move to next chunk
+			}
+		}
+		return null;
+	}
 //
 //	public static boolean semGroupMatch(LinkedHashSet<String> first, LinkedHashSet<String> second) {
 //		for(String s : first) {
@@ -129,10 +229,20 @@ public class HypernymProcessing {
 //		return false;
 //	}
 
-	public List<Argument> hypernymy(ScoredUMLSConcept head, ScoredUMLSConcept mod) {
-		LinkedHashSet<String> headGroup = head.getSemGroups();
-		LinkedHashSet<String> modGroup = mod.getSemGroups();
+	/***
+	 * Detects and returns isa relationship between two semantic items
+	 * @param head
+	 * @param mod
+	 * @return
+	 */
 
+	public List<Argument> hypernymy(SemanticItem head, SemanticItem mod) {
+		ScoredUMLSConcept headConcept = (ScoredUMLSConcept)((Entity) head).getSense();
+		ScoredUMLSConcept modConcept = (ScoredUMLSConcept)((Entity) mod).getSense();
+		LinkedHashSet<String> headGroup = headConcept.getSemGroups();
+		LinkedHashSet<String> modGroup = modConcept.getSemGroups();
+
+		Argument subject, object;
 		List<Argument> args = new ArrayList<>();
 
 		for (String h : headGroup) {
@@ -144,11 +254,23 @@ public class HypernymProcessing {
 				}
 			}
 		}
-		String headCUI = head.getId(); //TODO: check if this gets CUI
-		String modCUI = mod.getId();
+		String headCUI = ((Entity)head).getSense().getId(); //TODO: check if this gets CUI
+		String modCUI = ((Entity)mod).getSense().getId();
 		if (find(modCUI + headCUI)) {// check UMLS hiserarchy for modCUI: headCUI
 			//not sure how to get term variable from concept
+			subject = new Argument("subject", head);
+			object = new Argument("object", mod);
+			args.add(subject);
+			args.add(object);
+			return args;
+		} else if (find(headCUI + modCUI)) {
+			subject = new Argument("subject", mod);
+			object = new Argument("object", head);
+			args.add(subject);
+			args.add(object);
+			return args;
 		}
+		return null;
 	}
 
 	public boolean interveningPhrasesOK(Chunk NP1, Chunk NP2) {

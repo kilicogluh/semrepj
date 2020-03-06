@@ -65,30 +65,6 @@
     <orderEntry type="library" name="Maven: gov.nih.nlm.nls:wsdserver:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.sleepycat.db:db:4.1" level="project" />
     <orderEntry type="library" name="Maven: gov.nih.nlm.kss:kss-api:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="bioscores-2.0.1" level="project" />
-    <orderEntry type="library" name="javadoc" level="project" />
-    <orderEntry type="library" name="bioscores-2.0.11" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES />
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/lib/mybioscores.jar!/javadoc" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/mybioscores.jar!/src" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="LIRBFJEOFJERJP3" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/out/artifacts/Bio_SCoRes_test_jar2/Bio-SCoRes_test.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-        <jarDirectory url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/out/artifacts/Bio_SCoRes_test_jar2/Bio-SCoRes_test.jar!/" recursive="false" />
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="Bio-SCoRes" />
   </component>
 </module>

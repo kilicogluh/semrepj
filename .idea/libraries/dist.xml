@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="dist">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/dist/bioscores.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/dist/coref_tasks.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/dist/ling.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Research/Bio-SCoRes/dist/factuality_tasks.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
