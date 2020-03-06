@@ -45,8 +45,14 @@ public class HypernymProcessing {
 		log.info("Completed processing hierarchy database lookup with " + input + " ..." +(mmend-mmbeg) + " msec.");
 		return false;
 	}
-	
-	public List<Argument> intraNP(Chunk chunk) {
+
+	/***
+	 * trying to convert intraNP to look for both inter and intra; how to return args?
+	 * @param chunk
+	 * @return
+	 */
+
+	public List<Argument> intraInterNP(Chunk chunk) {
 		if(!chunk.getChunkType().equalsIgnoreCase("NP"))
 			return null;
 		SurfaceElement first = null, second = null;
@@ -175,8 +181,7 @@ public class HypernymProcessing {
 
 	}
 
-	public List<Argument> findInterNPwithinDistance(Chunk NPChunk) {
-		SurfaceElement NP = getHeadFromChunk(NPChunk);
+	public List<Argument> findInterNPwithinDistance(SurfaceElement NP) {
 		if (NP == null) return null;
 
 		ScoredUMLSConcept headConcept = null;

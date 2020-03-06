@@ -373,7 +373,7 @@ public class SemRep {
 	    for (Chunk chunk : ((SRSentence) cs).getChunks()) {
 		if (hpClient == null)
 		    hpClient = new HypernymProcessing(System.getProperties());
-		args = hpClient.intraNP(chunk);
+		args = hpClient.intraInterNP(chunk);
 		if (args != null)
 		    sif.newImplicitRelation(doc, "ISA", args);
 	    }
