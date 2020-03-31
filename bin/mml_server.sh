@@ -9,4 +9,4 @@
 # --modelsdir={path to the opennlp model directory}
 
 #java -jar metamapliteserver.jar $@
-java -Xmx1g -cp target/semrepj-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.ner.metamap.MetaMapLiteServer $@ 
+java -Xmx1g -cp target/semrepjava-0.0.1-SNAPSHOT-jar-with-dependencies.jar gov.nih.nlm.ner.metamap.MetaMapLiteServer $@ 

@@ -249,7 +249,7 @@ public class SemRep {
 	try {
 	    if (lexicon == null)
 		// lexicon = LexiconWrapper.getInstance("lexAccess.properties");
-		lexicon = LexiconWrapper.getInstance(); // lexAccess.properties are combined to semrepj.properties and removed
+		lexicon = LexiconWrapper.getInstance(); // lexAccess.properties are combined to semrepjava.properties and removed
 	    lexmatches = lexicon.findLexiconMatches(tokenInfo);
 	} catch (SQLException sqle) {
 	    log.warning("Unable to identify lexical items for the sentence ... Skipping.");
@@ -723,7 +723,7 @@ public class SemRep {
      */
     public static Properties getOptionProps(String[] args) throws FileNotFoundException, IOException {
 	if (args.length < 2) {
-	    System.out.println("Usage: semrepj --inputpath={in_path} --outputpath={out_path}.");
+	    System.out.println("Usage: semrepjava --inputpath={in_path} --outputpath={out_path}.");
 	    System.exit(2);
 	}
 	Properties optionProps = new Properties();
@@ -779,7 +779,7 @@ public class SemRep {
      */
     public static Properties getProps(String[] args) throws FileNotFoundException, IOException {
 	Properties defaultProps = new Properties(System.getProperties());
-	Properties configFileProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
+	Properties configFileProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
 	defaultProps.putAll(configFileProps);
 	Properties optionProps = getOptionProps(args);
 	defaultProps.putAll(optionProps);
@@ -806,7 +806,7 @@ public class SemRep {
     public static void init() {
 	initLogging();
 	// lexicon = LexiconWrapper.getInstance("lexAccess.properties");
-	lexicon = LexiconWrapper.getInstance(); // lexAccess.properties is combined to semrepj.properties
+	lexicon = LexiconWrapper.getInstance(); // lexAccess.properties is combined to semrepjava.properties
 	nerAnnotator = new MultiThreadClient(System.getProperties());
 	try {
 	    indAnnotator = new IndicatorAnnotator(

@@ -725,7 +725,7 @@ public class GNormPlusJNIServer extends GNormPlusStringWrapper {
     public static void main(String[] args) throws IOException {
 //	System.setProperty("java.util.logging.config.file", "logging.properties");
 	SemRep.initLogging();
-	GNormPlusJNIServer gps = GNormPlusJNIServer.getInstance("semrepj.properties");
+	GNormPlusJNIServer gps = GNormPlusJNIServer.getInstance("semrepjava.properties");
 	int port = Integer.parseInt(properties.getProperty("gnormplus.server.port","12347"));
 	ServerSocket serverSocket = new ServerSocket(port);
 	System.out.println("GNormPlus Server started.");

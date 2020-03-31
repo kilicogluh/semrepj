@@ -53,7 +53,7 @@ public class HypernymProcessingTest
     {
     	SemRep.initLogging();
 		Properties props = System.getProperties();
-		Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
+		Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
 		props.putAll(semrepProps);
 		System.setProperties(props);
 		Document doc = new Document("00000000","the analgesic aspirin");

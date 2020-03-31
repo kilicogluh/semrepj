@@ -53,7 +53,7 @@ public class MetaMapLiteTest
     {
     	SemRep.initLogging();
 	Properties props = System.getProperties();
-	Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
+	Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
 	props.putAll(semrepProps);
 	System.setProperties(props);
     	MetaMapLiteClient client = new MetaMapLiteClient(props);

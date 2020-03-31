@@ -52,7 +52,7 @@ public class GNormPlusClientTest extends TestCase {
     public void testGNormPlusClient() throws IOException {
         SemRep.initLogging();
         Properties props = System.getProperties();
-        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
+        Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepjava.properties");
         props.putAll(semrepProps);
 	Document doc = new Document("00000000","breast cancer and BRCA1");
 	SemRep.lexicalSyntacticAnalysis(doc);
