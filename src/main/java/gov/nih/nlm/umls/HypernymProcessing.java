@@ -76,6 +76,7 @@ public class HypernymProcessing {
 	 */
 
 	public List<Argument> interNP(Chunk chunk) {
+		log.info("Inernp starting");
 		if(!chunk.getChunkType().equalsIgnoreCase("NP"))
 			return null;
 		SurfaceElement first = null, second = null;
@@ -244,6 +245,7 @@ public class HypernymProcessing {
 				i++; //move to next chunk
 			}
 		}
+		System.out.println(output.size());
 		return null;
 	}
 //
