@@ -15,10 +15,10 @@ mvn install:install-file -Dfile=lib/metamaplite-3.6.2rc1.jar \
 			 -Dversion=3.6.2rc1 \
 			 -Dpackaging=jar
 
-mvn install:install-file -Dfile=lib/bioscores-2.0.1.jar \
+mvn install:install-file -Dfile=lib/bioscores-2.0.2.jar \
 			 -DgroupId=gov.nih.nlm \
 			 -DartifactId=bioscores \
-			 -Dversion=2.0.1 \
+			 -Dversion=2.0.2 \
 			 -Dpackaging=jar
 
 mvn install:install-file -Dfile=lib/lvg2016dist-0.0.1.jar \
