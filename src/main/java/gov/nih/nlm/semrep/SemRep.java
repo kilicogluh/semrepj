@@ -369,7 +369,6 @@ public class SemRep {
     public static void hypernymAnalysis(Document doc) {
 	SemanticItemFactory sif = doc.getSemanticItemFactory();
 	List<Argument> args;
-	// for each sentence in document, and for each NP chunk within the document, check for IntraNPHypernymy
 	for (Sentence cs : doc.getSentences()) {
 	    for (Chunk chunk : ((SRSentence) cs).getChunks()) {
 		if (hpClient == null)
