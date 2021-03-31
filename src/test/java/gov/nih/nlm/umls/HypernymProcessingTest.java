@@ -56,7 +56,13 @@ public class HypernymProcessingTest
 		Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
 		props.putAll(semrepProps);
 		System.setProperties(props);
-		Document doc = new Document("00000000","the analgesic aspirin");
+		Document doc = new Document("00000000",
+				"The analgesic aspirin. " + 
+				"Aspirin, the analgesic, treats headache. " + 
+				"Aspirin is a powerful analgesic. " + 
+				"Aspirin and other analgesics treat headache. " +
+				"Analgesics such as aspirin. " + 
+				"Berlin is Germany. Jamaica is a Caribbean country.");
 		SemRep.lexicalSyntacticAnalysis(doc);
 //    	SemRep.processForSemantics(doc);
 		SemRep.referentialAnalysis(doc);
@@ -66,7 +72,7 @@ public class HypernymProcessingTest
     		ImplicitRelation r  = (ImplicitRelation)s;
     		log.info(r.toString());
     	}
-		assertTrue(seList.size() != 0);
+		assertTrue(seList.size() == 6);
     }
     
 }

@@ -63,6 +63,15 @@ public class MedlineDocument extends Document{
 		return this.abstractText;
 	}
 	
+	// TODO: need to take into account structured abstracts
+	public void setSections() {
+		for (int i=0; i < sentences.size(); i++) {
+			SRSentence sent = (SRSentence)sentences.get(i);
+			if (titleText.contains(sent.getText())) sent.setSectionAbbreviation("ti");
+			else if (abstractText.contains(sent.getText())) sent.setSectionAbbreviation("ab");
+		}
+	}
+	
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		buf.append("PMID- " + id + "\n");
@@ -113,6 +122,7 @@ public class MedlineDocument extends Document{
 					title = json.getString("TI");
 					PMID = json.getString("PMID");
 					md = new MedlineDocument(PMID,title,text);
+					md.setSections();
 					mdList.add(md);
 					sb = new StringBuilder();
 					json = new JSONObject();
@@ -194,17 +204,13 @@ public class MedlineDocument extends Document{
 		if (eName.equalsIgnoreCase("medlinecitation")) {
 				if(sbAbstract != null) {
 					abs = sbAbstract.toString().trim();
-//					sentList = SemRep.openNLPClient.sentenceSplit(abs);
-//					currentDocument = new MedlineDocument(sbID.toString().trim(), abs, sentList, sbTitle.toString().trim());
 					currentDocument = new MedlineDocument(sbID.toString().trim(),sbTitle.toString().trim(),sbAbstract.toString().trim());
-	/*				for(Sentence sent: sentList) {
-						sent.setDocument(currentDocument);
-					}*/
-					docs.add(currentDocument);
 				}else {
 //					docs.add(new MedlineDocument(sbID.toString().trim(), null, null, sbTitle.toString().trim()));
-					docs.add(new MedlineDocument(sbID.toString().trim(), sbTitle.toString().trim(),""));
+					currentDocument = new MedlineDocument(sbID.toString().trim(), sbTitle.toString().trim(),"");
 				}
+				currentDocument.setSections();
+				docs.add(currentDocument);
 		} else if (eName.equalsIgnoreCase("pmid")) {
 		    inID = false;
 		} else if (eName.equalsIgnoreCase("articletitle")) {

@@ -21,9 +21,16 @@ public class OntologyDatabase
     
     private Environment env;
     private static final String ONTOLOGY_DATABASE = "ontology_database";
-    private Database ontologyDb;
+    private static Database ontologyDb;
+    private static OntologyDatabase relOntology;
     
-    public OntologyDatabase(String homeDirectory, boolean query)
+    public static OntologyDatabase getInstance(String homeDirectory) {
+    	if (relOntology == null)
+    		relOntology = new OntologyDatabase(homeDirectory, true);
+    	return relOntology;
+    }
+    
+    private OntologyDatabase(String homeDirectory, boolean query)
     {
     	log.info("Opening BerkeleyDB instance in: " + homeDirectory);
 
@@ -72,12 +79,12 @@ public class OntologyDatabase
         return env;
     }
     
-    public final Database getOntologyDatabase()
+    public final Database getDB()
     {
         return ontologyDb;
     }
     
-    public void putDataIntoDatabase(String filename) throws IOException {
+    private void addToDB(String filename) throws IOException {
     	BufferedReader in = new BufferedReader(new FileReader(filename));
         log.info("Opened file " + filename + " for reading.");
         String line = new String();

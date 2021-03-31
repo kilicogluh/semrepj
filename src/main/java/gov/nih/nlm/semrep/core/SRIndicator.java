@@ -3,10 +3,13 @@ package gov.nih.nlm.semrep.core;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.logging.Logger;
 
 import gov.nih.nlm.ling.sem.Indicator;
+import gov.nih.nlm.ling.sem.Sense;
 import nu.xom.Builder;
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -20,8 +23,20 @@ public class SRIndicator extends Indicator{
 	
 	public SRIndicator(Element el) {
 		super(el);
-		this.type = el.getAttributeValue("type");
+		this.type  = el.getAttributeValue("type");
+		
+		// inelegant, reattach cues
+		List<Sense> senses = this.getSenses();
+		Elements semEls = el.getChildElements("SemInfo");
+		for (int i=0; i <semEls.size(); i++) {
+			Element sEl = semEls.get(i);
+			String cue = sEl.getAttributeValue("cue");
+			Sense si = senses.get(i);
+			si.addFeature("cue", cue);
+		}
 	}
+	
+	
 	
 	public String getType() {
 		return this.type;
@@ -44,7 +59,6 @@ public class SRIndicator extends Indicator{
 			throws FileNotFoundException, IOException, ParsingException, ValidityException {
 		LinkedHashSet<Indicator> indicators = new LinkedHashSet<Indicator>();
 		Builder builder = new Builder();
-		log.info("Loading indicator file " + fileName);
 		nu.xom.Document xmlDoc = builder.build(new FileInputStream(fileName));
 		Element docc = xmlDoc.getRootElement();
 		Elements indEls = docc.getChildElements("SRIndicator");
@@ -57,7 +71,7 @@ public class SRIndicator extends Indicator{
 			SRIndicator indicator = new SRIndicator(ind);
 			indicators.add(indicator);
 		}
-		log.info("The number of all indicators loaded from the file " + fileName + " is " + indicators.size() + ".");
+		log.info("Loaded " + indicators.size() + " indicators from " + fileName + ".");
 		return indicators;		
 	}
 }

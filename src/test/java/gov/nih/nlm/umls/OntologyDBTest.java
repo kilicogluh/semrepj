@@ -41,7 +41,7 @@ private static Logger log = Logger.getLogger(OntologyDBTest.class.getName());
 	 */
 	public void testOntologyDB() throws IOException
 	{
-        	SemRep.initLogging();
+        SemRep.initLogging();
         Properties props = System.getProperties();
         Properties semrepProps = FileUtils.loadPropertiesFromFile("semrepj.properties");
         props.putAll(semrepProps);

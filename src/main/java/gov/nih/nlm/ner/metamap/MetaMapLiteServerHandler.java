@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import bioc.BioCDocument;
@@ -17,6 +18,7 @@ import gov.nih.nlm.nls.metamap.lite.types.ConceptInfo;
 import gov.nih.nlm.nls.metamap.lite.types.Entity;
 import gov.nih.nlm.nls.metamap.lite.types.Ev;
 import gov.nih.nlm.nls.ner.MetaMapLite;
+import gov.nih.nlm.semrep.utils.SemRepUtils;
 
 /**
  * This class handles client requests for MetaMapLite server
@@ -33,25 +35,17 @@ public class MetaMapLiteServerHandler extends Thread {
 	final BufferedOutputStream bos;
 	final Socket socket;
 	MetaMapLite metaMapLiteInst;
-	Map<String, String> semgroupMap;
+	Map<String, List<String>> semgroupMap;
 	
 
 	// Constructor
-	public MetaMapLiteServerHandler(Socket s, BufferedInputStream bis, BufferedOutputStream bos, MetaMapLite mtmpl, Map<String, String> semgroupMap) throws IOException {
+	public MetaMapLiteServerHandler(Socket s, BufferedInputStream bis, BufferedOutputStream bos, MetaMapLite mtmpl) throws IOException {
 		this.socket = s;
 		this.bis = bis;
 		this.bos = bos;
 		this.metaMapLiteInst = mtmpl;
-		this.semgroupMap = semgroupMap;
 	}
-	
-	public String[] findSemanticGroups(String[] semTypes) {
-		String[] semgroups = new String[semTypes.length];
-		for(int i = 0; i < semTypes.length; i++) {
-			semgroups[i] = semgroupMap.containsKey(semTypes[i]) ? semgroupMap.get(semTypes[i]) : "null";
-		}
-		return semgroups;
-	}
+
 
 	@Override
 	public void run() {
@@ -65,21 +59,18 @@ public class MetaMapLiteServerHandler extends Thread {
 	    	System.out.println("Entity size: " + entityList.size());
 	    	
 	    	StringBuilder sb = new StringBuilder(); 
-	    	String[] semTypes;
-	    	String[] semgroupinfos;
 	    	for (Entity entity: entityList) {
 	    		sb.append(entity.getStart() + ",," + entity.getLength() + ",,");
 				for (Ev ev: entity.getEvSet()) {
 					ConceptInfo ci = ev.getConceptInfo();
-					int setSize = ci.getSemanticTypeSet().size();
-					semTypes = ci.getSemanticTypeSet().toArray(new String[setSize]);
-					semgroupinfos = findSemanticGroups(semTypes);
+					Set<String> semtypes = ci.getSemanticTypeSet();
+					List<String> semgroups = SemRepUtils.findSemanticGroups(semtypes);
 					sb.append(ci.getCUI() + ",," + 
 							ci.getPreferredName() + ",," + 
 							ev.getConceptString() + ",," +
 							ev.getScore() + ",," +
-							String.join("::", semTypes) + ",," + 
-							String.join("::", semgroupinfos) + ",,");
+							String.join("::", semtypes) + ",," + 
+							String.join("::", semgroups) + ",,");
 				}
 				sb.append(";;"); 
 	    	}

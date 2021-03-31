@@ -2,18 +2,15 @@ package gov.nih.nlm.ner.metamap;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import gov.nih.nlm.ling.util.FileUtils;
 import gov.nih.nlm.nls.ner.MetaMapLite;
+import gov.nih.nlm.semrep.Constants;
 
 /**
  * Implementation of MetaMapLite server program
@@ -25,7 +22,7 @@ import gov.nih.nlm.nls.ner.MetaMapLite;
 
 public class MetaMapLiteServer {
 	private static Logger log = Logger.getLogger(MetaMapLiteServer.class.getName());
-	private static Map<String, String> semgroupMap = new HashMap<String, String>(); 
+//	private static Map<String, List<String>> semgroupMap = new HashMap<>(); 
 	
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, NoSuchMethodException, IllegalAccessException {
 		
@@ -62,7 +59,7 @@ public class MetaMapLiteServer {
 		MetaMapLite metaMapLiteInst = new MetaMapLite(System.getProperties());
 		int port = Integer.parseInt(System.getProperty("metamaplite.server.port", "12345"));
 		
-		initializeSemGroupMap();
+		Constants.initSemGroups();
 			
 		ServerSocket serverSocket = new ServerSocket(port); 
 		log.info("MML Server initialized...");
@@ -72,7 +69,7 @@ public class MetaMapLiteServer {
 				log.finest("MMLClient connected..");
 				BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
 				BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-				Thread t = new MetaMapLiteServerHandler(socket, bis, bos, metaMapLiteInst, semgroupMap);
+				Thread t = new MetaMapLiteServerHandler(socket, bis, bos, metaMapLiteInst);
 				t.start();
 			}
 		} catch (Exception e) {
@@ -83,22 +80,18 @@ public class MetaMapLiteServer {
 
 	}
 	
-	/**
-	 * initialize a map in order to find semantic group info for each semantic type
-	 * @throws IOException if semgroupinfo file is not found or cannot be read
-	 */
-	
-	private static void initializeSemGroupMap() throws IOException {
-		String filename = System.getProperty("semgroupinfo", "semgroupinfo.txt");
-		FileReader fr = new FileReader(filename);
-		BufferedReader br = new BufferedReader(fr);
-		String line = null;
-		while((line = br.readLine()) != null) {
-			int start = line.indexOf('(');
-			int end = line.indexOf(')');
-			String[] tokens = line.substring(start+1, end).split(",");
-			semgroupMap.put(tokens[0], tokens[1]);
-		}
-		br.close();
-	}
+
+//	private static void initializeSemGroupMap() throws IOException {
+//		String filename = System.getProperty("semgroupinfo", "resources/semgroups.txt");
+//		FileReader fr = new FileReader(filename);
+//		BufferedReader br = new BufferedReader(fr);
+//		String line = null;
+//		while((line = br.readLine()) != null) {
+//			int start = line.indexOf('(');
+//			int end = line.indexOf(')');
+//			String[] tokens = line.substring(start+1, end).split(",");
+//			semgroupMap.put(tokens[0], tokens[1]);
+//		}
+//		br.close();
+//	}
 }
