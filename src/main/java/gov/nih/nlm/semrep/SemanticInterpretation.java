@@ -130,6 +130,7 @@ public class SemanticInterpretation {
 				if (rightCands == null ) continue;
 			
 				SurfaceElement prev = seList.get(i-1).getSurfaceElement();
+				if (ch.isModifierOf(prev) == false) continue;
 				
 				// hyphenated adjective processing
 				boolean hyphenatedAdj = false;
@@ -141,7 +142,7 @@ public class SemanticInterpretation {
 					SpanList prsp = new SpanList(prev.getSpan().getBegin() + prev.getText().lastIndexOf("-")+1, prev.getSpan().getEnd());
 					
 					List<Candidate> tempCands = candidates.get(prev);
-				if (tempCands == null) continue;
+					if (tempCands == null) continue;
 					
 					for (Candidate c: tempCands) {
 						if (SpanList.subsume(entsp, c.getEntity().getSpan())) {

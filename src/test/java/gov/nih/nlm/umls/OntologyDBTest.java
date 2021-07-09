@@ -47,7 +47,8 @@ private static Logger log = Logger.getLogger(OntologyDBTest.class.getName());
         props.putAll(semrepProps);
         System.setProperties(props);
 	//	OntologyDatabase ontDB = new OntologyDatabase("ontologyDB", true);
-		OntologyDatabase ontDB = new OntologyDatabase(System.getProperty("ontologyDB.home","ontologyDB"), true);
+//		OntologyDatabase ontDB = new OntologyDatabase(System.getProperty("ontologyDB.home","ontologyDB"), true);
+        OntologyDatabase ontDB = OntologyDatabase.getInstance(System.getProperty("ontologyDB.home","ontologyDB"));
 		assertTrue(ontDB.contains("topp-uses-carb"));
 	}
 

@@ -81,7 +81,7 @@ public class SemRep {
 //	private static CoreferenceResolution corefResolver;
 	
 	private static boolean harmonizeWithLexicon = false;
-	private static boolean coreferenceResolution = false;
+//	private static boolean coreferenceResolution = false;
 	
 
 	/**
@@ -327,7 +327,7 @@ public class SemRep {
 		indAnnotator.annotateIndicators(doc, System.getProperties());
 		GenericCoreferencePipeline.coreferentialMentionDetection(doc);
 		openNLPChunking(doc);
-		CoreferenceResolution.mentionReferentLinking(doc);
+//		CoreferenceResolution.mentionReferentLinking(doc);
 		hypernymAnalysis(doc);
 		relationalAnalysis(doc);
 		log.info("Semantic processing complete.");
@@ -666,15 +666,15 @@ public class SemRep {
 			pe.printStackTrace();
 		}
 		harmonizeWithLexicon = Boolean.parseBoolean(System.getProperty("user.harmonizeWithLexicon"));
-		coreferenceResolution = Boolean.parseBoolean(System.getProperty("user.coreference"));
-		if (coreferenceResolution)  {
-			try {
-				CoreferenceResolution.init(System.getProperties());
-			} catch (IOException ioe) {
-				log.warning("Unable to start coreference resolver. Won't be able to identify coreference relations.");
-				ioe.printStackTrace();
-			}
-		}
+//		coreferenceResolution = Boolean.parseBoolean(System.getProperty("user.coreference"));
+//		if (coreferenceResolution)  {
+//			try {
+//				CoreferenceResolution.init(System.getProperties());
+//			} catch (IOException ioe) {
+//				log.warning("Unable to start coreference resolver. Won't be able to identify coreference relations.");
+//				ioe.printStackTrace();
+//			}
+//		}
 	}
 
 	public static void main(String[] args) throws IOException, ValidityException, ParsingException {
