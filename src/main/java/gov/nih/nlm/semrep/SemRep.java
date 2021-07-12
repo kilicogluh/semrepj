@@ -239,10 +239,10 @@ public class SemRep {
 				tokenInfos.add(new TokenInfo(w.getText(), w.getSpan().getBegin() - beg, w.getSpan().getEnd() - beg,
 						w.getPos(), w.getLemma()));
 			}
-//			if (openNLPClient == null)
-//				openNLPClient = new OpenNLPProcessing(true);
-//			openNLPClient.chunk(csent, tokenInfos);
-//			csent.addCompleted(SRSentence.Processing.CHUNK);
+			if (openNLPClient == null)
+				openNLPClient = new OpenNLPProcessing(true);
+			openNLPClient.chunk(csent, tokenInfos);
+			csent.addCompleted(SRSentence.Processing.CHUNK);
 			List<LexiconMatch> lexmatches = getLexicalItems(tokenInfos);
 			List<LexiconMatch> updatedLexMatches = lexicon.filterLexMatchesByPOS(lexmatches);
 			csent.setLexicalItems(updatedLexMatches);

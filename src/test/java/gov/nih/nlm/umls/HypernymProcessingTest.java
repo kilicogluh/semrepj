@@ -1,6 +1,7 @@
 package gov.nih.nlm.umls;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -10,6 +11,7 @@ import gov.nih.nlm.ling.sem.ImplicitRelation;
 import gov.nih.nlm.ling.sem.SemanticItem;
 import gov.nih.nlm.ling.util.FileUtils;
 import gov.nih.nlm.semrep.SemRep;
+import gov.nih.nlm.semrep.core.SemRepFactory;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -63,6 +65,8 @@ public class HypernymProcessingTest
 				"Aspirin and other analgesics treat headache. " +
 				"Analgesics such as aspirin. " + 
 				"Berlin is Germany. Jamaica is a Caribbean country.");
+		SemRepFactory sif = new SemRepFactory(doc,new HashMap<Class<? extends SemanticItem>,Integer>());
+		doc.setSemanticItemFactory(sif);
 		SemRep.lexicalSyntacticAnalysis(doc);
 //    	SemRep.processForSemantics(doc);
 		SemRep.referentialAnalysis(doc);
